@@ -134,6 +134,21 @@
         </executions>
       </plugin>
       <plugin>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <!--
+            prevent JFR from logging to stdout [0.242s][info   ][jfr,startup] Use jcmd 88403 JFR.dump name=1 to copy recording data to file.
+            https://bugs.openjdk.org/browse/JDK-8244190
+           -->
+          <argLine>
+            -agentpath:${project.build.directory}/nar/${project.artifactId}-${project.version}-${nar.aol}-jni/lib/${nar.aol}/jni/lib${project.artifactId}-${project.version}.${nar.extension}
+            -Xcheck:jni
+            -XX:StartFlightRecording:filename=${project.build.directory}/recording.jfr,dumponexit=true,maxsize=10m
+            -Xlog:jfr+startup=error
+          </argLine>
+         </configuration>
+      </plugin>
+      <plugin>
         <artifactId>maven-release-plugin</artifactId>
         <configuration>
           <autoVersionSubmodules>true</autoVersionSubmodules>
@@ -264,6 +279,18 @@
       <properties>
         <!-- https://github.com/maven-nar/nar-maven-plugin/issues/371 -->
         <nar.aolProperties>${project.basedir}/src/nar/apple.arm.aol.properties</nar.aolProperties>
+        <nar.extension>jnilib</nar.extension>
+      </properties>
+    </profile>
+    <profile>
+      <id>linux</id>
+      <activation>
+        <os>
+          <family>Linux</family>
+        </os>
+      </activation>
+      <properties>
+        <nar.extension>so</nar.extension>
       </properties>
     </profile>
   </profiles>
