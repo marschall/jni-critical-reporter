@@ -1,7 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.github.marschall</groupId>
-  <artifactId>jni-critical-reporter-parent</artifactId>
+  <artifactId>jni-critical-reporter</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <inceptionYear>2025</inceptionYear>
   <name>JNI Critical Reporter</name>
@@ -247,10 +247,15 @@
           <plugin>
             <artifactId>maven-surefire-plugin</artifactId>
             <configuration>
+              <!--
+                prevent JFR from logging to stdout [0.242s][info   ][jfr,startup] Use jcmd 88403 JFR.dump name=1 to copy recording data to file.
+                https://bugs.openjdk.org/browse/JDK-8244190
+               -->
               <argLine>
                 -agentpath:${project.build.directory}/nar/${project.artifactId}-${project.version}-${nar.aol}-jni/lib/${nar.aol}/jni/lib${project.artifactId}-${project.version}.jnilib
                 -Xcheck:jni
-                -XX:StartFlightRecording:filename=${project.build.directory}/recording.jfr,dumponexit=true
+                -XX:StartFlightRecording:filename=${project.build.directory}/recording.jfr,dumponexit=true,maxsize=10m
+                -Xlog:jfr+startup=error
               </argLine>
              </configuration>
           </plugin>
@@ -264,7 +269,7 @@
   </profiles>
 
   <properties>
-    <maven.compiler.release>11</maven.compiler.release>
+    <maven.compiler.release>17</maven.compiler.release>
     <maven.compiler.parameters>true</maven.compiler.parameters>
     <project.reporting.outputEncoding>utf-8</project.reporting.outputEncoding>
     <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
