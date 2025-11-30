@@ -3,11 +3,12 @@ JNI Ciritical Reporter
 
 Reports usage of [JNI criticals](https://shipilev.net/jvm/anatomy-quarks/9-jni-critical-gclocker/) in Java programs using JFR events.
 
+![JMC screenshot](src/site/recording.png)
+
 Implementation
 ----------------
 
-
-The project ist implemented as a native JVMTI agent. We [redirect](https://docs.oracle.com/en/java/javase/25/docs/specs/jvmti.html#SetJNIFunctionTable) `GetStringCritical` and `GetPrimitiveArrayCritical` in the JNI function table. We cache handles to keep JNI lookups to a minimum.
+The project is implemented as a native JVMTI agent. We [redirect](https://docs.oracle.com/en/java/javase/25/docs/specs/jvmti.html#SetJNIFunctionTable) `GetStringCritical` and `GetPrimitiveArrayCritical` in the JNI function table. We cache handles to keep JNI lookups to a minimum.
 
 Features
 ---------
@@ -22,14 +23,15 @@ The project currently reports the following information
 Limitations
 -----------
 
-Array and String length are currently not reported. For nested critical sections only the other one is reported to comply with JNI guidelines.
+- Array and String lengths are currently not reported.
+- For nested critical sections only the other one is reported to comply with JNI guidelines.
 
 Usage
 -----
 
 As the agent is a native binary you have to compile it from source
 
-```
+```sh
 mvn verify
 ```
 
