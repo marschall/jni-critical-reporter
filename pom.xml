@@ -29,8 +29,8 @@
   </licenses>
 
   <scm>
-    <connection>scm:git:git@github.com:marschall/finalize-analizer.git</connection>
-    <developerConnection>scm:git:git@github.com:marschall/finalize-analizer.git</developerConnection>
+    <connection>scm:git:git@github.com:marschall/jni-critical-reporter.git</connection>
+    <developerConnection>scm:git:git@github.com:marschall/jni-critical-reporter.git</developerConnection>
     <url>${project.url}</url>
     <tag>HEAD</tag>
   </scm>
